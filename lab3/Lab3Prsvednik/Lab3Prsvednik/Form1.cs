@@ -24,7 +24,6 @@ namespace Lab3Prsvednik
         static Bitmap bmp = new Bitmap(989, 382);
 
         public Graphics gr = Graphics.FromImage(bmp);
-        Pen p = new Pen(Color.Black);
         bool Mose_D = false;
         public int x0, y0;
 
