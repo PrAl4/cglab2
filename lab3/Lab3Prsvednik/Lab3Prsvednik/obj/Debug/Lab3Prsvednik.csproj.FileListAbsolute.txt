@@ -1,0 +1,10 @@
+D:\CompGraph\lab3\Lab3Prsvednik\Lab3Prsvednik\bin\Debug\Lab3Prsvednik.exe.config
+D:\CompGraph\lab3\Lab3Prsvednik\Lab3Prsvednik\bin\Debug\Lab3Prsvednik.exe
+D:\CompGraph\lab3\Lab3Prsvednik\Lab3Prsvednik\bin\Debug\Lab3Prsvednik.pdb
+D:\CompGraph\lab3\Lab3Prsvednik\Lab3Prsvednik\obj\Debug\Lab3Prsvednik.csproj.AssemblyReference.cache
+D:\CompGraph\lab3\Lab3Prsvednik\Lab3Prsvednik\obj\Debug\Lab3Prsvednik.Form1.resources
+D:\CompGraph\lab3\Lab3Prsvednik\Lab3Prsvednik\obj\Debug\Lab3Prsvednik.Properties.Resources.resources
+D:\CompGraph\lab3\Lab3Prsvednik\Lab3Prsvednik\obj\Debug\Lab3Prsvednik.csproj.GenerateResource.cache
+D:\CompGraph\lab3\Lab3Prsvednik\Lab3Prsvednik\obj\Debug\Lab3Prsvednik.csproj.CoreCompileInputs.cache
+D:\CompGraph\lab3\Lab3Prsvednik\Lab3Prsvednik\obj\Debug\Lab3Prsvednik.exe
+D:\CompGraph\lab3\Lab3Prsvednik\Lab3Prsvednik\obj\Debug\Lab3Prsvednik.pdb
