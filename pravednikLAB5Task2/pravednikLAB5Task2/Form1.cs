@@ -41,9 +41,6 @@ namespace pravednikLAB5Task2
         double depth;
         string roughness1;
         string depth1;
-        SolidBrush blackBrush = new SolidBrush(Color.Black);
-        Pen Pen = new Pen(Color.Black, 3);
-        Pen Pen2 = new Pen(Color.Black, 1);
         void MU(object sen, MouseEventArgs e) { Mose_D = false; }
         void MD(object sen, MouseEventArgs e)
         {
