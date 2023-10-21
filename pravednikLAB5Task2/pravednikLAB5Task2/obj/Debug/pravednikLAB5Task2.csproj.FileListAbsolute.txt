@@ -1,0 +1,10 @@
+D:\CompGraph\pravednikLAB5Task2\pravednikLAB5Task2\bin\Debug\pravednikLAB5Task2.exe.config
+D:\CompGraph\pravednikLAB5Task2\pravednikLAB5Task2\bin\Debug\pravednikLAB5Task2.exe
+D:\CompGraph\pravednikLAB5Task2\pravednikLAB5Task2\bin\Debug\pravednikLAB5Task2.pdb
+D:\CompGraph\pravednikLAB5Task2\pravednikLAB5Task2\obj\Debug\pravednikLAB5Task2.csproj.AssemblyReference.cache
+D:\CompGraph\pravednikLAB5Task2\pravednikLAB5Task2\obj\Debug\pravednikLAB5Task2.Form1.resources
+D:\CompGraph\pravednikLAB5Task2\pravednikLAB5Task2\obj\Debug\pravednikLAB5Task2.Properties.Resources.resources
+D:\CompGraph\pravednikLAB5Task2\pravednikLAB5Task2\obj\Debug\pravednikLAB5Task2.csproj.GenerateResource.cache
+D:\CompGraph\pravednikLAB5Task2\pravednikLAB5Task2\obj\Debug\pravednikLAB5Task2.csproj.CoreCompileInputs.cache
+D:\CompGraph\pravednikLAB5Task2\pravednikLAB5Task2\obj\Debug\pravednikLAB5Task2.exe
+D:\CompGraph\pravednikLAB5Task2\pravednikLAB5Task2\obj\Debug\pravednikLAB5Task2.pdb
