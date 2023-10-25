@@ -16,5 +16,6 @@ namespace lab6
         {
             InitializeComponent();
         }
+
     }
 }
