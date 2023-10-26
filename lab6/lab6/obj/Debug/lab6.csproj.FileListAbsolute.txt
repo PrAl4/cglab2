@@ -1,0 +1,10 @@
+D:\CG4cours\cglab2\lab6\lab6\bin\Debug\lab6.exe.config
+D:\CG4cours\cglab2\lab6\lab6\bin\Debug\lab6.exe
+D:\CG4cours\cglab2\lab6\lab6\bin\Debug\lab6.pdb
+D:\CG4cours\cglab2\lab6\lab6\obj\Debug\lab6.csproj.AssemblyReference.cache
+D:\CG4cours\cglab2\lab6\lab6\obj\Debug\lab6.Form1.resources
+D:\CG4cours\cglab2\lab6\lab6\obj\Debug\lab6.Properties.Resources.resources
+D:\CG4cours\cglab2\lab6\lab6\obj\Debug\lab6.csproj.GenerateResource.cache
+D:\CG4cours\cglab2\lab6\lab6\obj\Debug\lab6.csproj.CoreCompileInputs.cache
+D:\CG4cours\cglab2\lab6\lab6\obj\Debug\lab6.exe
+D:\CG4cours\cglab2\lab6\lab6\obj\Debug\lab6.pdb

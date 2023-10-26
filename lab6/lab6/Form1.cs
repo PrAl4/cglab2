@@ -17,5 +17,35 @@ namespace lab6
             InitializeComponent();
         }
 
+
+        //Кнопка отображения фигуры
+        private void displayingShape_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        //Кнопка отражения фигуру относительно выбраной координаты
+        private void ReflectionShape_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        //Кнопка масштабирования фигуры
+        private void sclaing_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        //нопка вращения фигуры относительно оси, проходящей через центр и выбранной координаты
+        private void RotationAxis_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        //Вращение относительно произвольной и выбранной координаты
+        private void RotationArbitary_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
