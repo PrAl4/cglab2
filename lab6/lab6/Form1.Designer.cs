@@ -64,6 +64,7 @@ namespace lab6
             this.Tetr.TabStop = true;
             this.Tetr.Text = "Тэтраэдр";
             this.Tetr.UseVisualStyleBackColor = true;
+            this.Tetr.CheckedChanged += new System.EventHandler(this.Tetr_CheckedChanged);
             // 
             // Oct
             // 
@@ -75,6 +76,7 @@ namespace lab6
             this.Oct.TabStop = true;
             this.Oct.Text = "Октаэдр";
             this.Oct.UseVisualStyleBackColor = true;
+            this.Oct.CheckedChanged += new System.EventHandler(this.Oct_CheckedChanged);
             // 
             // Geks
             // 
@@ -86,6 +88,7 @@ namespace lab6
             this.Geks.TabStop = true;
             this.Geks.Text = "Гексаэдр";
             this.Geks.UseVisualStyleBackColor = true;
+            this.Geks.CheckedChanged += new System.EventHandler(this.Geks_CheckedChanged);
             // 
             // pictureBox1
             // 
@@ -119,6 +122,7 @@ namespace lab6
             this.coordinates.Size = new System.Drawing.Size(121, 24);
             this.coordinates.TabIndex = 5;
             this.coordinates.Text = "Координата";
+            this.coordinates.SelectedIndexChanged += new System.EventHandler(this.coordinates_SelectedIndexChanged);
             // 
             // sclaing
             // 
