@@ -24,13 +24,6 @@ namespace lab6
             matrix = new double[rows, cols];
         }
 
-        //Взятие значения элемента
-        public double this[int i, int j]
-        {
-            get { return matrix[i, j]; }
-            set { matrix[i, j] = value; }
-        }
-
         //Заполнение матрицы нулями
         public Matrix fillZero()
         {
@@ -43,14 +36,21 @@ namespace lab6
         //Заполнение матрицы элементами из массива
         public Matrix fillWithElements(params double[] values)
         {
-            if(values.Length < rows * cols)
+            if (values.Length < rows * cols)
             {
                 throw new Exception("Ошибка: элементов недостаточно, чтобы заполнить матрицу!");
             }
             for (int i = 0; i < rows; i++)
                 for (int j = 0; j < cols; j++)
-                    matrix[i, j] = Math.Round(values[i * cols +j], 1);
+                    matrix[i, j] = Math.Round(values[i * cols +j], 2);
             return this;
+        }
+
+        //Взятие значения элемента
+        public double this[int i, int j]
+        {
+            get { return matrix[i, j]; }
+            set { matrix[i, j] = value; }
         }
 
         //Умножение матрицы на число

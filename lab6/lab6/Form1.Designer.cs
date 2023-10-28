@@ -41,6 +41,9 @@ namespace lab6
             this.RotationAxis = new System.Windows.Forms.Button();
             this.RotationArbitary = new System.Windows.Forms.Button();
             this.rotationCoorditates = new System.Windows.Forms.ComboBox();
+            this.projectionType = new System.Windows.Forms.ComboBox();
+            this.ShowAxis = new System.Windows.Forms.Button();
+            this.Clear = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -96,13 +99,13 @@ namespace lab6
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Location = new System.Drawing.Point(247, 6);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1022, 662);
+            this.pictureBox1.Size = new System.Drawing.Size(1022, 741);
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
             // 
             // ReflectionShape
             // 
-            this.ReflectionShape.Location = new System.Drawing.Point(10, 172);
+            this.ReflectionShape.Location = new System.Drawing.Point(10, 273);
             this.ReflectionShape.Name = "ReflectionShape";
             this.ReflectionShape.Size = new System.Drawing.Size(145, 53);
             this.ReflectionShape.TabIndex = 4;
@@ -117,7 +120,7 @@ namespace lab6
             "X",
             "Y",
             "Z"});
-            this.coordinates.Location = new System.Drawing.Point(12, 231);
+            this.coordinates.Location = new System.Drawing.Point(10, 332);
             this.coordinates.Name = "coordinates";
             this.coordinates.Size = new System.Drawing.Size(121, 24);
             this.coordinates.TabIndex = 5;
@@ -126,7 +129,7 @@ namespace lab6
             // 
             // sclaing
             // 
-            this.sclaing.Location = new System.Drawing.Point(10, 279);
+            this.sclaing.Location = new System.Drawing.Point(10, 376);
             this.sclaing.Name = "sclaing";
             this.sclaing.Size = new System.Drawing.Size(145, 53);
             this.sclaing.TabIndex = 6;
@@ -136,7 +139,7 @@ namespace lab6
             // 
             // RotationAxis
             // 
-            this.RotationAxis.Location = new System.Drawing.Point(10, 449);
+            this.RotationAxis.Location = new System.Drawing.Point(10, 497);
             this.RotationAxis.Name = "RotationAxis";
             this.RotationAxis.Size = new System.Drawing.Size(145, 53);
             this.RotationAxis.TabIndex = 7;
@@ -146,7 +149,7 @@ namespace lab6
             // 
             // RotationArbitary
             // 
-            this.RotationArbitary.Location = new System.Drawing.Point(10, 508);
+            this.RotationArbitary.Location = new System.Drawing.Point(10, 556);
             this.RotationArbitary.Name = "RotationArbitary";
             this.RotationArbitary.Size = new System.Drawing.Size(145, 53);
             this.RotationArbitary.TabIndex = 8;
@@ -161,17 +164,54 @@ namespace lab6
             "X",
             "Y",
             "Z"});
-            this.rotationCoorditates.Location = new System.Drawing.Point(10, 567);
+            this.rotationCoorditates.Location = new System.Drawing.Point(10, 615);
             this.rotationCoorditates.Name = "rotationCoorditates";
             this.rotationCoorditates.Size = new System.Drawing.Size(121, 24);
             this.rotationCoorditates.TabIndex = 10;
             this.rotationCoorditates.Text = "Координата";
             // 
+            // projectionType
+            // 
+            this.projectionType.FormattingEnabled = true;
+            this.projectionType.Items.AddRange(new object[] {
+            "Изометрия",
+            "Аксонометрия",
+            "Перспектива"});
+            this.projectionType.Location = new System.Drawing.Point(10, 158);
+            this.projectionType.Name = "projectionType";
+            this.projectionType.Size = new System.Drawing.Size(121, 24);
+            this.projectionType.TabIndex = 11;
+            this.projectionType.Text = "Проекция";
+            this.projectionType.SelectedIndexChanged += new System.EventHandler(this.projectionType_SelectedIndexChanged);
+            // 
+            // ShowAxis
+            // 
+            this.ShowAxis.Location = new System.Drawing.Point(10, 214);
+            this.ShowAxis.Name = "ShowAxis";
+            this.ShowAxis.Size = new System.Drawing.Size(145, 53);
+            this.ShowAxis.TabIndex = 12;
+            this.ShowAxis.Text = "Показать координатную ось";
+            this.ShowAxis.UseVisualStyleBackColor = true;
+            this.ShowAxis.Click += new System.EventHandler(this.ShowAxis_Click);
+            // 
+            // Clear
+            // 
+            this.Clear.Location = new System.Drawing.Point(10, 694);
+            this.Clear.Name = "Clear";
+            this.Clear.Size = new System.Drawing.Size(145, 53);
+            this.Clear.TabIndex = 13;
+            this.Clear.Text = "Очистить";
+            this.Clear.UseVisualStyleBackColor = true;
+            this.Clear.Click += new System.EventHandler(this.Clear_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1275, 674);
+            this.ClientSize = new System.Drawing.Size(1275, 759);
+            this.Controls.Add(this.Clear);
+            this.Controls.Add(this.ShowAxis);
+            this.Controls.Add(this.projectionType);
             this.Controls.Add(this.rotationCoorditates);
             this.Controls.Add(this.RotationArbitary);
             this.Controls.Add(this.RotationAxis);
@@ -204,6 +244,9 @@ namespace lab6
         private System.Windows.Forms.Button RotationAxis;
         private System.Windows.Forms.Button RotationArbitary;
         private System.Windows.Forms.ComboBox rotationCoorditates;
+        private System.Windows.Forms.ComboBox projectionType;
+        private System.Windows.Forms.Button ShowAxis;
+        private System.Windows.Forms.Button Clear;
     }
 }
 

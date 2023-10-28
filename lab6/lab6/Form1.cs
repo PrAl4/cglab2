@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 
 namespace lab6
 {
@@ -19,6 +20,8 @@ namespace lab6
         public Form1()
         {
             InitializeComponent();
+            Points.Center = new PointF(pictureBox1.Width / 2 , pictureBox1.Height / 2);
+            gr = pictureBox1.CreateGraphics();
             gr.Clear(Color.White);
         }
 
@@ -26,6 +29,7 @@ namespace lab6
         bool AxisX = false;
         bool AxisY = false;
         bool AxisZ = false;
+        bool Axis = false;
 
         //Элемент множества фигур
         Polyhedron polyh;
@@ -33,13 +37,17 @@ namespace lab6
         //Текущая фигуры
         Polyhedrons POLYHEN;
 
-        //Экран отображения
-        static Bitmap bmp = new Bitmap(1050, 680);
-        public Graphics gr = Graphics.FromImage(bmp);
+        //Тип проекции
+        Projection projType;
+
+        Graphics gr;
+
 
         //Кисти
-        SolidBrush blackBrush = new SolidBrush(Color.Black);
-        Pen Pen1 = new Pen(Color.Black, 1);
+        Pen Pen1 = new Pen(Color.Black, 3);
+
+        //Лист точек для координатной оси
+        List<Points> pnts = new List<Points>();
 
 
         //Кнопка отображения фигуры
@@ -51,11 +59,17 @@ namespace lab6
                 throw new Exception("Ни одна фигура не выбрана!");
             }
 
+            //Берем текущую фигуру в зависимости от типа 
+            POLYHEN = GetPolyhedrons.Get_Polyhedron(polyh);
+            Draw_Polyhedron(POLYHEN);
         }
 
         //Рисует ребро 
         void Draw_Line(Lines line)
         {
+            //это не удаляйте, это для проверки отрисовки
+            //MessageBox.Show(line.leftP.GetPoint().ToString());
+           // MessageBox.Show(line.rightP.GetPoint().ToString());
             gr.DrawLine(Pen1, line.leftP.GetPoint(), line.rightP.GetPoint());
         }
 
@@ -77,9 +91,71 @@ namespace lab6
             }
         }
 
+        //Рисует координатную ось
+        void Draw_Axis()
+        {
+
+            if (Axis)
+            {
+
+                pnts.Add(new Points(0, 0, 0));
+                pnts.Add(new Points(150, 0, 0));
+                pnts.Add(new Points(0, 150, 0));
+                pnts.Add(new Points(0, 0, 150));
+
+                //Рисует ось Х
+                gr.DrawLine(new Pen(new SolidBrush(Color.Blue), 2), pnts[0].GetPoint(), pnts[1].GetPoint());
+
+                //Рисует ось У
+                gr.DrawLine(new Pen(new SolidBrush(Color.Red), 2), pnts[0].GetPoint(), pnts[2].GetPoint());
+
+                //Рисует ось Z
+                gr.DrawLine(new Pen(new SolidBrush(Color.Green), 2), pnts[0].GetPoint(), pnts[3].GetPoint());
+
+            }
+
+            if (!Axis)
+            {
+                pnts.Clear();
+            }
+
+        }
+
         //Кнопка отражения фигуру относительно выбраной координаты
         private void ReflectionShape_Click(object sender, EventArgs e)
         {
+            Matrix res;
+
+            if (AxisX)
+            {
+                res = new Matrix(4, 4).fillWithElements(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1);
+
+            }
+            else if (AxisY)
+            {
+                res = new Matrix(4, 4).fillWithElements(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+
+            }
+            else if (AxisZ)
+            {
+                res = new Matrix(4, 4).fillWithElements(-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            }
+            else
+                throw new Exception("Ошибка отражения!");
+
+            foreach(var pol in POLYHEN.edges)
+            {
+                foreach(var ln in pol.lines)
+                {
+                    //проходимся по всем линиям и отражаем точки по необходимой координате
+                    Matrix temp = res * new Matrix(4, 1).fillWithElements(ln.leftP.getDoubleX, ln.leftP.getDoubleY, ln.leftP.getDoubleZ, 1);
+                    ln.leftP = new Points(temp[0, 0], temp[1, 0], temp[2, 0]);
+                    temp = res * new Matrix(4, 1).fillWithElements(ln.rightP.getDoubleX, ln.rightP.getDoubleY, ln.rightP.getDoubleZ, 1);
+                    ln.rightP = new Points(temp[0, 0], temp[1, 0], temp[2, 0]);
+                }
+            }
+            gr.Clear(Color.White);
+            Draw_Polyhedron(POLYHEN);
 
         }
 
@@ -140,6 +216,43 @@ namespace lab6
                 AxisZ = true;
             }
             
+        }
+
+        //Изменение выбора типа проекции
+        private void projectionType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string choice = projectionType.SelectedItem.ToString();
+            if(choice == "Изометрия")
+            {
+                Points.proj = Projection.IZOMETRIC;
+            }else if(choice == "Аксонометрия")
+            {
+                Points.proj = Projection.AXONOMETRIC;
+            }else if(choice == "Перспектива")
+            {
+                Points.proj = Projection.PROSPECTIVE;
+            }
+        }
+
+        //Показать координатную ось
+        private void ShowAxis_Click(object sender, EventArgs e)
+        {
+            if (!Axis)
+            {
+                Axis = true;
+                Draw_Axis();
+            }
+            else
+            {
+                Axis = false;
+                Draw_Axis();
+            }
+        }
+
+        //Очистить поле
+        private void Clear_Click(object sender, EventArgs e)
+        {
+            gr.Clear(Color.White);
         }
     }
 }
