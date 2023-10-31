@@ -38,7 +38,7 @@ namespace lab6
 
 
         //Матрица аксонометрической проекции (есть с этим сложности)
-        // public static Matrix AxonometricMatrix = new Matrix(4, 4).fillWithElements();
+         public static Matrix AxonometricMatrix = new Matrix(4, 4).fillWithElements(1, 0, 0, 0, 0, 1, 0, 0, Math.Cos(Math.PI / 4), Math.Cos(Math.PI / 4), 0, 0, 0, 0, 0, 1);
 
         //Матрица перспективной проекции (взяла из лекции)
         public static Matrix ProspectiveMatrix = new Matrix(4, 4).fillWithElements(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, koef, 0, 0, 0, 1);
@@ -81,18 +81,20 @@ namespace lab6
                 p.Y = Center.Y + (float)temp[1, 0] - 150;
                 return p;
             }
-            else //(proj == Projection.PROSPECTIVE)
+            else if (proj == Projection.PROSPECTIVE)
             {
                 Matrix temp = new Matrix(1, 4).fillWithElements(getDoubleX, getDoubleY, getDoubleZ, 1) * ProspectiveMatrix * (1 / (koef * getDoubleZ + 1));
                 p.X = Center.X + (float)temp[0, 0] - 100;
                 p.Y = Center.Y + (float)temp[0, 1] - 150;
                 return p;
             }
-            //}
-            //else
-            //{
-
-            //}
+            else
+            {
+                Matrix temp = new Matrix(1, 4).fillWithElements(getDoubleX, getDoubleY, getDoubleZ, 1) * AxonometricMatrix;
+                p.X = Center.X + (float)temp[0, 0];
+                p.Y = Center.Y + (float)temp[0, 1] - 150;
+                return p;
+            }
         }
     }
 

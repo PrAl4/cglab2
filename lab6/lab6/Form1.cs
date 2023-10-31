@@ -124,38 +124,48 @@ namespace lab6
         //Кнопка отражения фигуру относительно выбраной координаты
         private void ReflectionShape_Click(object sender, EventArgs e)
         {
-            Matrix res;
-
             if (AxisX)
             {
-                res = new Matrix(4, 4).fillWithElements(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1);
-
+                foreach (var eg in POLYHEN.edges)
+                {
+                    foreach (var l in eg.lines)
+                    {
+                         l.leftP = new Points(l.leftP.getDoubleY, l.leftP.getDoubleX, l.leftP.getDoubleZ * -1);
+                         l.rightP = new Points(l.rightP.getDoubleY, l.rightP.getDoubleX, l.rightP.getDoubleZ * -1);
+                    }
+                }
+                gr.Clear(Color.White);
+                Draw_Polyhedron(POLYHEN);
             }
             else if (AxisY)
             {
-                res = new Matrix(4, 4).fillWithElements(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-
+                foreach (var eg in POLYHEN.edges)
+                {
+                    foreach (var l in eg.lines)
+                    {
+                        l.leftP = new Points(l.leftP.getDoubleZ, l.leftP.getDoubleY * -1, l.leftP.getDoubleX);
+                        l.rightP = new Points(l.rightP.getDoubleZ, l.rightP.getDoubleY * -1, l.rightP.getDoubleX);
+                    }
+                }
+                gr.Clear(Color.White);
+                Draw_Polyhedron(POLYHEN);
             }
             else if (AxisZ)
             {
-                res = new Matrix(4, 4).fillWithElements(-1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+                foreach (var eg in POLYHEN.edges)
+                {
+                    foreach (var l in eg.lines)
+                    {
+                        l.leftP = new Points(l.leftP.getDoubleX * -1, l.leftP.getDoubleZ, l.leftP.getDoubleY);
+                        l.rightP = new Points(l.rightP.getDoubleX * -1, l.rightP.getDoubleZ, l.rightP.getDoubleY);
+                    }
+                }
+                gr.Clear(Color.White);
+                Draw_Polyhedron(POLYHEN);
             }
             else
                 throw new Exception("Ошибка отражения!");
-
-            foreach(var pol in POLYHEN.edges)
-            {
-                foreach(var ln in pol.lines)
-                {
-                    //проходимся по всем линиям и отражаем точки по необходимой координате
-                    Matrix temp = res * new Matrix(4, 1).fillWithElements(ln.leftP.getDoubleX, ln.leftP.getDoubleY, ln.leftP.getDoubleZ, 1);
-                    ln.leftP = new Points(temp[0, 0], temp[1, 0], temp[2, 0]);
-                    temp = res * new Matrix(4, 1).fillWithElements(ln.rightP.getDoubleX, ln.rightP.getDoubleY, ln.rightP.getDoubleZ, 1);
-                    ln.rightP = new Points(temp[0, 0], temp[1, 0], temp[2, 0]);
-                }
-            }
-            gr.Clear(Color.White);
-            Draw_Polyhedron(POLYHEN);
+            
 
         }
 
