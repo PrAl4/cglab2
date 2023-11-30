@@ -33,6 +33,9 @@
             this.Save_in_file = new System.Windows.Forms.Button();
             this.choose_polyhedron = new System.Windows.Forms.ComboBox();
             this.choose_axis = new System.Windows.Forms.ComboBox();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.choose_proection = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -72,7 +75,7 @@
             "Тетраэдр",
             "Гексаэдр",
             "Октаэдр"});
-            this.choose_polyhedron.Location = new System.Drawing.Point(15, 196);
+            this.choose_polyhedron.Location = new System.Drawing.Point(15, 242);
             this.choose_polyhedron.Name = "choose_polyhedron";
             this.choose_polyhedron.Size = new System.Drawing.Size(174, 24);
             this.choose_polyhedron.TabIndex = 3;
@@ -86,18 +89,39 @@
             "X",
             "Y",
             "Z"});
-            this.choose_axis.Location = new System.Drawing.Point(15, 291);
+            this.choose_axis.Location = new System.Drawing.Point(15, 272);
             this.choose_axis.Name = "choose_axis";
             this.choose_axis.Size = new System.Drawing.Size(174, 24);
             this.choose_axis.TabIndex = 4;
             this.choose_axis.Text = "Выберите ось";
             this.choose_axis.SelectedIndexChanged += new System.EventHandler(this.choose_axis_SelectedIndexChanged);
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.DefaultExt = "txt";
+            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.Filter = "Текстовые файлы|*.txt;";
+            // 
+            // choose_proection
+            // 
+            this.choose_proection.FormattingEnabled = true;
+            this.choose_proection.Items.AddRange(new object[] {
+            "Изометрия",
+            "Аксонометрия",
+            "Перспектива"});
+            this.choose_proection.Location = new System.Drawing.Point(16, 302);
+            this.choose_proection.Name = "choose_proection";
+            this.choose_proection.Size = new System.Drawing.Size(174, 24);
+            this.choose_proection.TabIndex = 5;
+            this.choose_proection.Text = "Выберите проекцию";
+            this.choose_proection.SelectedIndexChanged += new System.EventHandler(this.choose_proection_SelectedIndexChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1177, 665);
+            this.Controls.Add(this.choose_proection);
             this.Controls.Add(this.choose_axis);
             this.Controls.Add(this.choose_polyhedron);
             this.Controls.Add(this.Save_in_file);
@@ -117,6 +141,9 @@
         private System.Windows.Forms.Button Save_in_file;
         private System.Windows.Forms.ComboBox choose_polyhedron;
         private System.Windows.Forms.ComboBox choose_axis;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.ComboBox choose_proection;
     }
 }
 

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,77 +13,94 @@ using System.Windows.Forms;
 namespace lab7
 {
     enum Polyhedron { TETRAHEDRON  = 0, HEXAHEDRON , OCTAHEDRON };
+    enum Axis { X = 0, Y, Z };
     public partial class Form1 : Form
     {
-        List<Points> RootationPoints = new List<Points>();
-        int division;
-
         public Form1()
         {
             InitializeComponent();
+            Points.Center = new PointF(pictureBox1.Width / 2, pictureBox1.Height / 2);
+            gr = pictureBox1.CreateGraphics();
             gr.Clear(Color.White);
         }
 
-        static Bitmap bmp = new Bitmap(880, 650);
-        public Graphics gr = Graphics.FromImage(bmp);
+        Graphics gr;
+        Polyhedron current_polyhedron_type;
+        Axis current_axis;
+        Polyhedrons current_polyhedron;
+        Projection cuurent_porojection;
 
-        void Algorithm_Bras(Point p1, Point p2)
+        void draw_polyhedron(Polyhedrons polyhedron_)
         {
-            int x0 = (int)p1.X, y0 = (int)p1.Y, y1 = (int)p2.Y, x1 = (int)p2.X;
-            int dX = Math.Abs(x1 - x0), dY = -Math.Abs(y1 - y0);
-            int sx, sy;
-            if (x0 < x1)
-                sx = 1;
-            else
+            Pen pen = new Pen(Color.Black, 2);
+            foreach(var edge in polyhedron_.edges)
             {
-                sx = -1;
-            }
-            if (y0 < y1)
-                sy = 1;
-            else
-            {
-                sy = -1;
-            }
-            int err = dX + dY;
-            bmp.SetPixel(x1, y1, Color.Black);
-            while (x0 != x1 || y0 != y1)
-            {
-                bmp.SetPixel(x0, y0, Color.Black);
-                int err2 = err * 2;
-                if (err2 >= dY)
+                foreach (var line in edge.lines)
                 {
-                    err += dY;
-                    x0 += sx;
-                }
-                if (err2 <= dX)
-                {
-                    err += dX;
-                    y0 += sy;
+                    gr.DrawLine(pen, line.leftP.GetPoint(), line.rightP.GetPoint());
                 }
             }
-            pictureBox1.Image = bmp;
         }
-
         
 
         private void Download_from_file_Click(object sender, EventArgs e)
         {
-
+            if(openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string file_name = openFileDialog1.FileName;
+                if (File.Exists(file_name))
+                {
+                    current_polyhedron = Polyhedrons.ReadFromFile(file_name);
+                    //where we must draw polyhedron
+                    gr.Clear(Color.White);
+                    draw_polyhedron(current_polyhedron);
+                }
+            }
         }
 
         private void Save_in_file_Click(object sender, EventArgs e)
         {
-
+            if(saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                current_polyhedron.SaveToFile(saveFileDialog1.FileName);
+            }
         }
 
         private void choose_polyhedron_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch()
+            if (choose_polyhedron.SelectedIndex == 0)
+                current_polyhedron_type = Polyhedron.TETRAHEDRON;
+            else if (choose_polyhedron.SelectedIndex == 1)
+                current_polyhedron_type = Polyhedron.HEXAHEDRON;
+            else if (choose_polyhedron.SelectedIndex == 2)
+                current_polyhedron_type = Polyhedron.OCTAHEDRON;
+            else
+                MessageBox.Show("Не выбрана ни одна фигура");
         }
 
         private void choose_axis_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (choose_axis.SelectedIndex == 0)
+                current_axis = Axis.X;
+            else if (choose_axis.SelectedIndex == 1)
+                current_axis = Axis.Y;
+            else if (choose_axis.SelectedIndex == 2)
+                current_axis = Axis.Z;
+            else
+                MessageBox.Show("Не выбрана ни одна ось");
 
+        }
+
+        private void choose_proection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (choose_proection.SelectedIndex == 0)
+                Points.proj = Projection.IZOMETRIC;
+            else if (choose_proection.SelectedIndex == 1)
+                Points.proj = Projection.AXONOMETRIC;
+            else if (choose_proection.SelectedIndex == 2)
+                Points.proj = Projection.PROSPECTIVE;
+            else
+                MessageBox.Show("Не выбрана ни одна проекция");
         }
     }
 }

@@ -81,5 +81,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="load_hex.txt" />
+    <Content Include="load_oct.txt" />
+    <Content Include="load_tetr.txt" />
+    <Content Include="save.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
