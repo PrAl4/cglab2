@@ -1,0 +1,17 @@
+D:\CG\cglab2\Lab_8\Lab_8\obj\Debug\net8.0-windows\Lab_8.Form1.resources
+D:\CG\cglab2\Lab_8\Lab_8\obj\Debug\net8.0-windows\Lab_8.csproj.GenerateResource.cache
+D:\CG\cglab2\Lab_8\Lab_8\obj\Debug\net8.0-windows\Lab_8.GeneratedMSBuildEditorConfig.editorconfig
+D:\CG\cglab2\Lab_8\Lab_8\obj\Debug\net8.0-windows\Lab_8.AssemblyInfoInputs.cache
+D:\CG\cglab2\Lab_8\Lab_8\obj\Debug\net8.0-windows\Lab_8.AssemblyInfo.cs
+D:\CG\cglab2\Lab_8\Lab_8\obj\Debug\net8.0-windows\Lab_8.csproj.CoreCompileInputs.cache
+D:\CG\cglab2\Lab_8\Lab_8\obj\Debug\net8.0-windows\Lab_8.sourcelink.json
+D:\CG\cglab2\Lab_8\Lab_8\bin\Debug\net8.0-windows\Lab_8.exe
+D:\CG\cglab2\Lab_8\Lab_8\bin\Debug\net8.0-windows\Lab_8.deps.json
+D:\CG\cglab2\Lab_8\Lab_8\bin\Debug\net8.0-windows\Lab_8.runtimeconfig.json
+D:\CG\cglab2\Lab_8\Lab_8\bin\Debug\net8.0-windows\Lab_8.dll
+D:\CG\cglab2\Lab_8\Lab_8\bin\Debug\net8.0-windows\Lab_8.pdb
+D:\CG\cglab2\Lab_8\Lab_8\obj\Debug\net8.0-windows\Lab_8.dll
+D:\CG\cglab2\Lab_8\Lab_8\obj\Debug\net8.0-windows\refint\Lab_8.dll
+D:\CG\cglab2\Lab_8\Lab_8\obj\Debug\net8.0-windows\Lab_8.pdb
+D:\CG\cglab2\Lab_8\Lab_8\obj\Debug\net8.0-windows\Lab_8.genruntimeconfig.cache
+D:\CG\cglab2\Lab_8\Lab_8\obj\Debug\net8.0-windows\ref\Lab_8.dll
