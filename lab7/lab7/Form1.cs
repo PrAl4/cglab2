@@ -26,9 +26,13 @@ namespace lab7
 
         Graphics gr;
         Polyhedron current_polyhedron_type;
-        Axis current_axis;
         Polyhedrons current_polyhedron;
         Projection cuurent_porojection;
+        double v_XD;
+        double v_YD;
+        double v_ZD;
+        double v_angle;
+        bool flag_axis = false;
 
         void draw_polyhedron(Polyhedrons polyhedron_)
         {
@@ -91,6 +95,44 @@ namespace lab7
 
         }
 
+        void Draw_Axis()
+        {
+
+            List<Points> pnts = new List<Points>();
+            if (!flag_axis){
+                pnts.Add(new Points(0, 0, 0));
+                pnts.Add(new Points(150, 0, 0));
+                pnts.Add(new Points(0, 150, 0));
+                pnts.Add(new Points(0, 0, 150));
+
+                //Рисует ось Х
+                gr.DrawLine(new Pen(new SolidBrush(Color.Blue), 2), pnts[0].GetPoint(), pnts[1].GetPoint());
+
+                //Рисует ось У
+                gr.DrawLine(new Pen(new SolidBrush(Color.Red), 2), pnts[0].GetPoint(), pnts[2].GetPoint());
+
+                //Рисует ось Z
+                gr.DrawLine(new Pen(new SolidBrush(Color.Green), 2), pnts[0].GetPoint(), pnts[3].GetPoint());
+            }
+            else
+            {
+                pnts.Add(new Points(0, 0, 0));
+                pnts.Add(new Points(0, 0, 0));
+                pnts.Add(new Points(0, 0, 0));
+                pnts.Add(new Points(0, 0, 0));
+                //Рисует ось Х
+                gr.DrawLine(new Pen(new SolidBrush(Color.Blue), 2), pnts[0].GetPoint(), pnts[1].GetPoint());
+
+                //Рисует ось У
+                gr.DrawLine(new Pen(new SolidBrush(Color.Red), 2), pnts[0].GetPoint(), pnts[2].GetPoint());
+
+                //Рисует ось Z
+                gr.DrawLine(new Pen(new SolidBrush(Color.Green), 2), pnts[0].GetPoint(), pnts[3].GetPoint());
+            }
+                
+
+        }
+
         private void choose_proection_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (choose_proection.SelectedIndex == 0)
@@ -101,6 +143,58 @@ namespace lab7
                 Points.proj = Projection.PROSPECTIVE;
             else
                 MessageBox.Show("Не выбрана ни одна проекция");
+        }
+
+        private void Scale_Click(object sender, EventArgs e)
+        {
+            scale(ref current_polyhedron, v_XD, v_YD, v_ZD);
+            gr.Clear(Color.White);
+            draw_polyhedron(current_polyhedron);
+        }
+
+        private void Shift_Click(object sender, EventArgs e)
+        {
+            shift(ref current_polyhedron, v_XD, v_YD, v_ZD);
+            gr.Clear(Color.White);
+            draw_polyhedron(current_polyhedron);
+        }
+
+        private void Rotation_Click(object sender, EventArgs e)
+        {
+            rotate(ref current_polyhedron, current_axis, v_angle);
+            gr.Clear(Color.White);
+            draw_polyhedron(current_polyhedron);
+        }
+
+        private void Clear_Click(object sender, EventArgs e)
+        {
+            gr.Clear(Color.White);
+        }
+
+        private void valueXDouble_TextChanged(object sender, EventArgs e)
+        {
+            v_XD = double.Parse(valueXDouble.Text);
+        }
+
+        private void ValueYDouble_TextChanged(object sender, EventArgs e)
+        {
+            v_YD = double.Parse(ValueYDouble.Text);
+        }
+
+        private void ValueZDouble_TextChanged(object sender, EventArgs e)
+        {
+            v_ZD = double.Parse(ValueZDouble.Text);
+        }
+
+        private void valueAngle_TextChanged(object sender, EventArgs e)
+        {
+            v_angle = double.Parse(valueAngle.Text);
+        }
+
+        private void draw_axiss_Click(object sender, EventArgs e)
+        {
+            Draw_Axis();
+            flag_axis = !flag_axis;
         }
     }
 }
