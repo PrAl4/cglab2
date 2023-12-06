@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 
 namespace Lab_8
 {
-    internal class Matrix
+    public class Matrix
     {
         //Сама матрица
         double[,] matrix;

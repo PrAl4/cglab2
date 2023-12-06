@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\CG\\cglab2\\Lab_8\\Lab_8\\Lab_8.csproj": {}
+    "D:\\CG2\\cglab2\\Lab_8\\Lab_8\\Lab_8.csproj": {}
   },
   "projects": {
-    "D:\\CG\\cglab2\\Lab_8\\Lab_8\\Lab_8.csproj": {
+    "D:\\CG2\\cglab2\\Lab_8\\Lab_8\\Lab_8.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\CG\\cglab2\\Lab_8\\Lab_8\\Lab_8.csproj",
+        "projectUniqueName": "D:\\CG2\\cglab2\\Lab_8\\Lab_8\\Lab_8.csproj",
         "projectName": "Lab_8",
-        "projectPath": "D:\\CG\\cglab2\\Lab_8\\Lab_8\\Lab_8.csproj",
+        "projectPath": "D:\\CG2\\cglab2\\Lab_8\\Lab_8\\Lab_8.csproj",
         "packagesPath": "C:\\Users\\Huawei\\.nuget\\packages\\",
-        "outputPath": "D:\\CG\\cglab2\\Lab_8\\Lab_8\\obj\\",
+        "outputPath": "D:\\CG2\\cglab2\\Lab_8\\Lab_8\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Huawei\\AppData\\Roaming\\NuGet\\NuGet.Config",

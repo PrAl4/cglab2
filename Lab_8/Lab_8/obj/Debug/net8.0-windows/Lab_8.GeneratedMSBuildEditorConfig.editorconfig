@@ -14,6 +14,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Lab_8
-build_property.ProjectDir = D:\CG\cglab2\Lab_8\Lab_8\
+build_property.ProjectDir = D:\CG2\cglab2\Lab_8\Lab_8\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

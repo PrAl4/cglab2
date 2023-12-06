@@ -11,10 +11,10 @@ using System.Numerics;
 
 namespace Lab_8
 {
-    public enum Projection { IZOMETRIC, PROSPECTIVE, AXONOMETRIC };
+    public enum Projection { IZOMETRIC, PROSPECTIVE, AXONOMETRIC, PARALLEL };
 
     //Класс точек 
-    class Points
+    public class Points
     {
 
         // Координаты
@@ -97,12 +97,15 @@ namespace Lab_8
                 p.Y = Center.Y + (float)temp[0, 1] - 150;
                 return p;
             }
-            else
+            else if(proj == Projection.AXONOMETRIC)
             {
                 Matrix temp = new Matrix(1, 4).fillWithElements(getDoubleX, getDoubleY, getDoubleZ, 1) * AxonometricMatrix;
                 p.X = Center.X + (float)temp[0, 0];
                 p.Y = Center.Y + (float)temp[0, 1] - 150;
                 return p;
+            }else
+            {
+                return new PointF(Center.X + (float)getDoubleX, Center.Y + (float)getDoubleY);
             }
         }
 
@@ -189,7 +192,7 @@ namespace Lab_8
             return this;
         }
 
-        public Edges assLines(IEnumerable<Lines> lines)
+        public Edges addLines(IEnumerable<Lines> lines)
         {
             this.edge.AddRange(lines);
             return this;
@@ -211,29 +214,6 @@ namespace Lab_8
             y /= edge.Count;
             z /= edge.Count;
             return new Points(x, y, z);
-        }
-
-        public List<Points> Verticles
-        {
-            get => verticles;
-        }
-
-        public List<Points> NormalsV
-        {
-            get
-            {
-                List<Points> a = new List<Points>();
-                a.Add(edge.First().get_coord());
-                List<Points> b = new List<Points>();
-                b.Add(edge.First().get_reverse_coord());
-                for(int i = 0; i< a.Count; i++)
-                { 
-                    normalsV[i].getDoubleX = b[i].getDoubleX * a[i].getDoubleX;
-                    normalsV[i].getDoubleY = b[i].getDoubleY * a[i].getDoubleY;
-                    normalsV[i].getDoubleZ = b[i].getDoubleZ * a[i].getDoubleZ;
-                }
-                return normalsV;
-            }
         }
 
     }
@@ -475,6 +455,96 @@ namespace Lab_8
             octa.addEdge(new Edges().addLine(new Lines(p3, p2)).addLine(new Lines(p2, p1)).addLine(new Lines(p1, p3)));
 
             return octa;
+        }
+    }
+
+    public class VectorNormals
+    {
+        public double X;
+        public double Y;
+        public double Z;
+
+        public VectorNormals(double x, double y, double z, bool is_normalized = false)
+        {
+            double normalizated = 0.0;
+            if (is_normalized)
+            {
+                normalizated = Math.Sqrt(x * x + y * y + z * z);
+            }
+            else
+            {
+                normalizated = 1.0;
+            }
+
+            this.X = x / normalizated;
+            this.Y = y / normalizated;
+            this.Z = z / normalizated;
+        }
+
+        public VectorNormals(Points p, bool is_normalized = false)
+        {
+            this.X = p.getDoubleX;
+            this.Y = p.getDoubleY;
+            this.Z = p.getDoubleZ;
+        }
+
+        public VectorNormals MadeNormalazed()
+        {
+            double normalizated = Math.Sqrt(X * X + Y * Y + Z * Z);
+            this.X /= normalizated;
+            this.Y /= normalizated;
+            this.Z /= normalizated;
+            return this;
+        }
+
+        public static VectorNormals operator +(VectorNormals v1, VectorNormals v2){
+            return new VectorNormals(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z);
+        }
+
+        public static VectorNormals operator -(VectorNormals v1, VectorNormals v2)
+        {
+            return new VectorNormals(v1.X - v2.X, v1.Y - v2.Y, v1.Z - v2.Z);
+        }
+
+        public static VectorNormals operator *(VectorNormals v1, VectorNormals v2)
+        {
+            return new VectorNormals(v1.Y * v2.Z - v1.Z * v2.Y, v1.Z * v2.X - v1.X * v2.Z, v1.X * v2.Y - v1.Y * v2.X);
+        }
+
+        public static VectorNormals operator *(VectorNormals v, double a)
+        {
+            return new VectorNormals(v.X * a, v.Y * a, v.Z * a);
+        }
+    }
+
+    public class Camera
+    {
+        public Points position;
+        public VectorNormals right;
+        public VectorNormals up;
+        public VectorNormals direction;
+
+        public Camera()
+        {
+            position = new Points(-10, 0, 0);
+            direction = new VectorNormals(1, 0, 0);
+            up = new VectorNormals(0, 0, 1);
+            right = (direction * up).MadeNormalazed();
+        }
+
+        public void moving(double move_left_or_right = 0, double move_up_or_down = 0, double move_back_or_forward = 0)
+        {
+            position.getDoubleX += move_left_or_right * right.X + move_back_or_forward * direction.X + move_up_or_down * up.X;
+            position.getDoubleY += move_left_or_right * right.Y + move_back_or_forward * direction.Y + move_up_or_down * up.Y;
+            position.getDoubleZ += move_left_or_right * right.Z + move_back_or_forward * direction.Z + move_up_or_down * up.Z;
+        }
+
+        public Points PointView(Points p)
+        {
+            double new_position_x = right.X * (p.getDoubleX - position.getDoubleX) + right.Y * (p.getDoubleY - position.getDoubleY) + right.Z * (p.getDoubleZ - position.getDoubleZ);
+            double new_position_y = up.X * (p.getDoubleX - position.getDoubleX) + up.Y * (p.getDoubleY - position.getDoubleY) + up.Z * (p.getDoubleZ - position.getDoubleZ); ;
+            double new_position_z = direction.X * (p.getDoubleX - position.getDoubleX) + direction.Y * (p.getDoubleY - position.getDoubleY) + direction.Z * (p.getDoubleZ - position.getDoubleZ); ;
+            return new Points(new_position_x, new_position_y, new_position_z);
         }
     }
 }
