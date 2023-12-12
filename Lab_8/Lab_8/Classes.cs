@@ -31,9 +31,10 @@ namespace Lab_8
         //Точка центра для перспективы
         public static PointF Center;
 
-        static Size screen;
-        static double z_near;
-        static double z_far;
+        public static Size screen;
+        public static double z_near;
+        public static double z_far;
+        public static double fov;
 
         //Матрицу изометрии брала отсюда
         //https://studfile.net/preview/903563/page:5/
@@ -113,6 +114,30 @@ namespace Lab_8
         {
             parallelMatrix = new Matrix(4, 4).fillWithElements(1.0 / screen.Width, 0, 0, 0, 0, 1.0 / screen.Height, 0, 0, 0, 0, -2.0 / (z_far - z_near), -(z_far + z_near) / (z_far - z_near), 0, 0, 0, 1);
         }
+
+        public bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            Points objAsPart = obj as Points;
+            if (objAsPart == null) return false;
+            else return Equals(objAsPart);
+        }
+
+            public bool Equals(Points other)
+        {
+            if (other == null) return false;
+            return (this.getDoubleX.Equals(other.getDoubleX) && this.getDoubleY.Equals(other.getDoubleY) && this.getDoubleZ.Equals(other.getDoubleZ));
+        }
+        public static void setProjection(Size screenSize, double zScreenNear, double zScreenFar, double fov)
+        {
+            Points.screen = screenSize;
+            Points.z_near = zScreenNear;
+            Points.z_far = zScreenFar;
+            Points.fov = fov;
+            parallelMatrix = new Matrix(4, 4).fillWithElements(1.0 / screenSize.Width, 0, 0, 0, 0, 1.0 / screenSize.Height, 0, 0, 0, 0, -2.0 / (zScreenFar - zScreenNear), -(zScreenFar + zScreenNear) / (zScreenFar - zScreenNear), 0, 0, 0, 1);
+            ProspectiveMatrix = new Matrix(4, 4).fillWithElements(screenSize.Height / (Math.Tan(Math.PI *(fov / 2)/180.0) * screenSize.Width), 0, 0, 0, 0, 1.0 / Math.Tan(Math.PI * (fov / 2)/ 180.0), 0, 0, 0, 0, -(zScreenFar + zScreenNear) / (zScreenFar - zScreenNear), -2 * (zScreenFar * zScreenNear) / (zScreenFar - zScreenNear), 0, 0, -1, 0);
+        }
+
     }
 
     //Класс ребер
@@ -145,12 +170,12 @@ namespace Lab_8
             set => rightP = value;
         }
 
-        public Points get_reverse_coord()
+        public Points get_coord()
         {
             return new Points(leftP.getDoubleX - rightP.getDoubleX, leftP.getDoubleY - rightP.getDoubleY, leftP.getDoubleZ - rightP.getDoubleZ);
         }
 
-        public Points get_coord()
+        public Points get_reverse_coord()
         {
             return new Points(rightP.getDoubleX - leftP.getDoubleX, rightP.getDoubleY - leftP.getDoubleY, rightP.getDoubleZ - leftP.getDoubleZ);
         }
@@ -162,15 +187,13 @@ namespace Lab_8
     {
         //Лист ребер, которые составляют грань
         List<Lines> edge;
-        List<Points> normalsV;
-        public List<Points> verticles;
+        public VectorNormals normals;
 
         //Конструктор
         public Edges()
         {
             edge = new List<Lines>();
-            verticles = new List<Points>();
-            normalsV = new List<Points>();
+            normals = new VectorNormals(0, 0, 0);
         }
 
         //
@@ -216,6 +239,27 @@ namespace Lab_8
             return new Points(x, y, z);
         }
 
+        public bool OnSide(VectorNormals v, double Dist, Points cen, Points veiw)
+        {
+            double scal1 = (veiw.getDoubleX + v.X) * v.X + (veiw.getDoubleY + v.Y) * v.Y + (veiw.getDoubleZ + v.Z) * v.Z + Dist;
+            double scal2 = v.X * cen.getDoubleX + v.Y * cen.getDoubleY + v.Z * cen.getDoubleZ + Dist;
+            return scal1 * scal2 > 0;
+        }
+
+        public void NormalsV(Points center)
+        {
+            VectorNormals v1 = new VectorNormals(edge[1].get_coord());
+            VectorNormals v2 = new VectorNormals(edge[0].get_reverse_coord());
+            normals = (v2 * v1).MadeNormalazed();
+            double dist = -(edge[1].leftP.getDoubleX*normals.X + edge[1].leftP.getDoubleY * normals.Y + edge[1].leftP.getDoubleZ * normals.Z);
+            if (OnSide(normals, dist, center, edge[1].leftP))
+            {
+                normals.X *= -1;
+                normals.Y *= -1;
+                normals.Z *= -1;
+            }
+        }
+
     }
 
     //Многогранник
@@ -223,6 +267,7 @@ namespace Lab_8
     {
         //Лист граней
         List<Edges> polyhedrons;
+        public Points center;
 
         //Конструктор
         public Polyhedrons()
@@ -247,6 +292,24 @@ namespace Lab_8
         {
             polyhedrons.Add(edge);
             return this;
+        }
+
+        public void CenterPol()
+        {
+            double sx =0.0;
+            double sy=0.0;
+            double sz=0.0;
+            foreach(var ed in edges)
+            {
+                sx += ed.Center().getDoubleX;
+                sy += ed.Center().getDoubleY;
+                sz += ed.Center().getDoubleZ;
+            }
+            center = new Points(sx/edges.Count, sy/edges.Count, sz/edges.Count);
+            for(int i =0; i < edges.Count; i++)
+            {
+                edges[i].NormalsV(center);
+            }
         }
 
         public Polyhedrons addEdges(IEnumerable<Edges> edges)
@@ -514,37 +577,6 @@ namespace Lab_8
         public static VectorNormals operator *(VectorNormals v, double a)
         {
             return new VectorNormals(v.X * a, v.Y * a, v.Z * a);
-        }
-    }
-
-    public class Camera
-    {
-        public Points position;
-        public VectorNormals right;
-        public VectorNormals up;
-        public VectorNormals direction;
-
-        public Camera()
-        {
-            position = new Points(-10, 0, 0);
-            direction = new VectorNormals(1, 0, 0);
-            up = new VectorNormals(0, 0, 1);
-            right = (direction * up).MadeNormalazed();
-        }
-
-        public void moving(double move_left_or_right = 0, double move_up_or_down = 0, double move_back_or_forward = 0)
-        {
-            position.getDoubleX += move_left_or_right * right.X + move_back_or_forward * direction.X + move_up_or_down * up.X;
-            position.getDoubleY += move_left_or_right * right.Y + move_back_or_forward * direction.Y + move_up_or_down * up.Y;
-            position.getDoubleZ += move_left_or_right * right.Z + move_back_or_forward * direction.Z + move_up_or_down * up.Z;
-        }
-
-        public Points PointView(Points p)
-        {
-            double new_position_x = right.X * (p.getDoubleX - position.getDoubleX) + right.Y * (p.getDoubleY - position.getDoubleY) + right.Z * (p.getDoubleZ - position.getDoubleZ);
-            double new_position_y = up.X * (p.getDoubleX - position.getDoubleX) + up.Y * (p.getDoubleY - position.getDoubleY) + up.Z * (p.getDoubleZ - position.getDoubleZ); ;
-            double new_position_z = direction.X * (p.getDoubleX - position.getDoubleX) + direction.Y * (p.getDoubleY - position.getDoubleY) + direction.Z * (p.getDoubleZ - position.getDoubleZ); ;
-            return new Points(new_position_x, new_position_y, new_position_z);
         }
     }
 }

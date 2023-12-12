@@ -38,23 +38,15 @@
             save_polyh = new Button();
             openFileDialog1 = new OpenFileDialog();
             saveFileDialog1 = new SaveFileDialog();
-            LeftRight = new TrackBar();
-            UpDown = new TrackBar();
-            BackForward = new TrackBar();
-            textBox1 = new TextBox();
-            textBox2 = new TextBox();
-            textBox3 = new TextBox();
             NonFaceButton = new Button();
+            Rotation = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)LeftRight).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)UpDown).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)BackForward).BeginInit();
             SuspendLayout();
             // 
             // pictureBox1
             // 
             pictureBox1.BorderStyle = BorderStyle.FixedSingle;
-            pictureBox1.Location = new Point(538, 9);
+            pictureBox1.Location = new Point(245, 9);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(1128, 659);
             pictureBox1.TabIndex = 0;
@@ -107,7 +99,7 @@
             // 
             Clear_but.Location = new Point(12, 616);
             Clear_but.Name = "Clear_but";
-            Clear_but.Size = new Size(247, 52);
+            Clear_but.Size = new Size(213, 52);
             Clear_but.TabIndex = 5;
             Clear_but.Text = "Очистить";
             Clear_but.UseVisualStyleBackColor = true;
@@ -137,69 +129,6 @@
             // 
             openFileDialog1.FileName = "openFileDialog1";
             // 
-            // LeftRight
-            // 
-            LeftRight.Location = new Point(382, 12);
-            LeftRight.Name = "LeftRight";
-            LeftRight.Size = new Size(150, 56);
-            LeftRight.TabIndex = 8;
-            LeftRight.Scroll += LeftRight_Scroll;
-            LeftRight.Maximum = 50;
-            LeftRight.Minimum = -50;
-            LeftRight.TickFrequency = 5;
-            LeftRight.LargeChange = 3;
-            LeftRight.SmallChange = 2;
-            // 
-            // UpDown
-            // 
-            UpDown.Location = new Point(382, 70);
-            UpDown.Name = "UpDown";
-            UpDown.Size = new Size(150, 56);
-            UpDown.TabIndex = 9;
-            UpDown.Scroll += UpDown_Scroll;
-            UpDown.Maximum = 50;
-            UpDown.Minimum = -50;
-            UpDown.TickFrequency = 5;
-            UpDown.LargeChange = 3;
-            UpDown.SmallChange = 2;
-            // 
-            // BackForward
-            // 
-            BackForward.Location = new Point(382, 132);
-            BackForward.Name = "BackForward";
-            BackForward.Size = new Size(150, 56);
-            BackForward.TabIndex = 10;
-            BackForward.Scroll += BackForward_Scroll;
-            BackForward.Maximum = 50;
-            BackForward.Minimum = -50;
-            BackForward.TickFrequency = 5;
-            BackForward.LargeChange = 3;
-            BackForward.SmallChange = 2;
-            // 
-            // textBox1
-            // 
-            textBox1.Location = new Point(239, 10);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(147, 27);
-            textBox1.TabIndex = 11;
-            textBox1.Text = "Влево - Вправо";
-            // 
-            // textBox2
-            // 
-            textBox2.Location = new Point(239, 70);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(147, 27);
-            textBox2.TabIndex = 12;
-            textBox2.Text = "Вниз - Вверх";
-            // 
-            // textBox3
-            // 
-            textBox3.Location = new Point(239, 132);
-            textBox3.Name = "textBox3";
-            textBox3.Size = new Size(147, 27);
-            textBox3.TabIndex = 13;
-            textBox3.Text = "Назад - Вперед";
-            // 
             // NonFaceButton
             // 
             NonFaceButton.Location = new Point(12, 288);
@@ -210,18 +139,23 @@
             NonFaceButton.UseVisualStyleBackColor = true;
             NonFaceButton.Click += NonFaceButton_Click;
             // 
+            // Rotation
+            // 
+            Rotation.Location = new Point(12, 346);
+            Rotation.Name = "Rotation";
+            Rotation.Size = new Size(213, 52);
+            Rotation.TabIndex = 15;
+            Rotation.Text = "Поворот";
+            Rotation.UseVisualStyleBackColor = true;
+            Rotation.Click += Rotation_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1678, 680);
+            ClientSize = new Size(1382, 680);
+            Controls.Add(Rotation);
             Controls.Add(NonFaceButton);
-            Controls.Add(textBox3);
-            Controls.Add(textBox2);
-            Controls.Add(textBox1);
-            Controls.Add(BackForward);
-            Controls.Add(UpDown);
-            Controls.Add(LeftRight);
             Controls.Add(save_polyh);
             Controls.Add(load_polyn);
             Controls.Add(Clear_but);
@@ -233,11 +167,7 @@
             Name = "Form1";
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)LeftRight).EndInit();
-            ((System.ComponentModel.ISupportInitialize)UpDown).EndInit();
-            ((System.ComponentModel.ISupportInitialize)BackForward).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -252,12 +182,7 @@
         private Button save_polyh;
         private OpenFileDialog openFileDialog1;
         private SaveFileDialog saveFileDialog1;
-        private TrackBar LeftRight;
-        private TrackBar UpDown;
-        private TrackBar BackForward;
-        private TextBox textBox1;
-        private TextBox textBox2;
-        private TextBox textBox3;
         private Button NonFaceButton;
+        private Button Rotation;
     }
 }

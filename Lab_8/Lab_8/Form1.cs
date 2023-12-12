@@ -8,6 +8,8 @@ using System.IO;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using System.Reflection;
+using System.Numerics;
 
 namespace Lab_8
 {
@@ -21,6 +23,9 @@ namespace Lab_8
             Points.Center = new PointF(pictureBox1.Width / 2, pictureBox1.Height / 2);
             gr = pictureBox1.CreateGraphics();
             gr.Clear(Color.White);
+            Points.proj = Projection.PROSPECTIVE;
+            Size size = pictureBox1.Size;
+            Points.setProjection(size, 1, 100, 45);
         }
 
         Graphics gr;
@@ -29,7 +34,8 @@ namespace Lab_8
         Polyhedrons current_polyhedron;
         GetPolyhedrons current_polyh;
         Projection cuurent_porojection;
-        Camera cam = new Camera();
+        public static List<Points> list_points;
+        List<Lines> temp_list_lines;
 
         void draw_polyhedron(Polyhedrons polyhedron_)
         {
@@ -43,8 +49,17 @@ namespace Lab_8
             }
         }
 
+        public void drawView(VectorNormals v,  Points center)
+        {
+            Pen pen = new Pen(Color.Red, 2);
+            gr.DrawLine(pen, new Points(v.X, v.Y, v.Z).GetPoint(), center.GetPoint());
+        }
+
         Polyhedrons NonFaceFaces(Polyhedrons polyh_nonface)
         {
+            VectorNormals view = new VectorNormals(-1, -1.05, 10);
+            current_polyhedron.CenterPol();
+            drawView(view, current_polyhedron.center);
             bool flag = true;
             if (current_polyhedron_type == Polyhedron.TETRAHEDRON)
             {
@@ -67,34 +82,18 @@ namespace Lab_8
             {
                 foreach (var edge in current_polyhedron.edges)
                 {
-                    //строим вектор нормали для каждой грани
-                    VectorNormals vn = new VectorNormals(cam.PointView(edge.Center())).MadeNormalazed();
-                    //
-                    VectorNormals v_first_line = new VectorNormals(edge.lines.First().get_coord());
-                    VectorNormals v_last_line = new VectorNormals(edge.lines.Last().get_reverse_coord());
-                    VectorNormals v_norm = v_first_line * v_last_line;
-                    Points p_view = new Points(v_norm.X, v_norm.Y, v_norm.Z);
-                    VectorNormals v_view_normal = new VectorNormals(cam.PointView(p_view)).MadeNormalazed();
-                    double mult_scalar = v_view_normal.X * vn.X + v_view_normal.Y * vn.Y + v_view_normal.Z * vn.Z;
-
-                    if (mult_scalar > 0)
+                    edge.NormalsV(current_polyhedron.center);
+                    double angle = (edge.normals.X * view.X + edge.normals.Y * view.Y + edge.normals.Z * view.Z)/
+                        (Math.Sqrt(edge.normals.X * edge.normals.X + edge.normals.Y * edge.normals.Y + edge.normals.Z * edge.normals.Z) +
+                        Math.Sqrt(view.X * view.X + view.Y * view.Y + view.Z * view.Z));
+                    double arc = Math.Acos(angle);
+                    if (arc * 180 / Math.PI < 90)
                     {
                         polyh_nonface.addEdge(edge);
                     }
                 }
             }
             return polyh_nonface;
-        }
-
-        public void draw_camera()
-        {
-            Pen pen1 = new Pen(Color.Blue, 2);
-            Pen pen2 = new Pen(Color.Red, 2);
-            Pen pen3 = new Pen(Color.Green, 2);
-
-            gr.DrawLine(pen1, cam.position.GetPoint(), (new Points(cam.position.getDoubleX + cam.direction.X * 150, cam.position.getDoubleY + cam.direction.Y * 150, cam.position.getDoubleZ + cam.direction.Z * 150)).GetPoint());
-            gr.DrawLine(pen2, cam.position.GetPoint(), (new Points(cam.position.getDoubleX + cam.right.X * 150, cam.position.getDoubleY + cam.right.Y * 150, cam.position.getDoubleZ + cam.right.Z * 150)).GetPoint());
-            gr.DrawLine(pen3, cam.position.GetPoint(), (new Points(cam.position.getDoubleX + cam.up.X * 150, cam.position.getDoubleY + cam.up.Y * 150, cam.position.getDoubleZ + cam.up.Z * 150)).GetPoint());
         }
 
         private void draw_polyh_Click(object sender, EventArgs e)
@@ -136,6 +135,36 @@ namespace Lab_8
             gr.Clear(Color.White);
         }
 
+        void rotate(ref Polyhedrons polyh, Axis ax, double angle)
+        {
+            angle = Math.PI * angle / 180.0;
+            Matrix rotate_ = new Matrix(0, 0);
+            if (ax == Axis.X)
+            {
+                rotate_ = new Matrix(4, 4).fillWithElements(1, 0, 0, 0, 0, Math.Cos(angle), -Math.Sin(angle), 0, 0, Math.Sin(angle), Math.Cos(angle), 0, 0, 0, 0, 1);
+            }
+            else if (ax == Axis.Y)
+            {
+                rotate_ = new Matrix(4, 4).fillWithElements(Math.Cos(angle), 0, Math.Sin(angle), 0, 0, 1, 0, 0, -Math.Sin(angle), 0, Math.Cos(angle), 0, 0, 0, 0, 1);
+            }
+            else if (ax == Axis.Z)
+            {
+                rotate_ = new Matrix(4, 4).fillWithElements(Math.Cos(angle), -Math.Sin(angle), 0, 0, Math.Sin(angle), Math.Cos(angle), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            }
+            foreach (var edge in polyh.edges)
+            {
+                foreach (var line in edge.lines)
+                {
+                    var p1 = line.leftP;
+                    var p2 = line.rightP;
+                    var temp_p1 = rotate_ * new Matrix(4, 1).fillWithElements(p1.getDoubleX, p1.getDoubleY, p1.getDoubleZ, 1);
+                    var temp_p2 = rotate_ * new Matrix(4, 1).fillWithElements(p2.getDoubleX, p2.getDoubleY, p2.getDoubleZ, 1);
+                    line.leftP = new Points(temp_p1[0, 0], temp_p1[1, 0], temp_p1[2, 0]);
+                    line.rightP = new Points(temp_p2[0, 0], temp_p2[1, 0], temp_p2[2, 0]);
+                }
+            }
+        }
+
         private void choose_polyh_SelectedIndexChanged(object sender, EventArgs e)
         {
 
@@ -169,42 +198,27 @@ namespace Lab_8
                 Points.proj = Projection.AXONOMETRIC;
             else if (choose_proj.SelectedIndex == 2)
                 Points.proj = Projection.PROSPECTIVE;
-            else if(choose_proj.SelectedIndex == 3)
+            else if (choose_proj.SelectedIndex == 3)
             {
                 Points.proj = Projection.PARALLEL;
-            }else
+            }
+            else
                 MessageBox.Show("Не выбрана ни одна проекция");
         }
 
-        double r = 0.0;
-        double u = 0.0;
-        double b = 0.0;
-        private void LeftRight_Scroll(object sender, EventArgs e)
+        private void Rotation_Click(object sender, EventArgs e)
         {
-            r = LeftRight.Value;
-            cam.moving(r, u, b);
-        }
-
-
-        private void UpDown_Scroll(object sender, EventArgs e)
-        {
-            u = UpDown.Value;
-            cam.moving(r, u, b);
-        }
-
-        private void BackForward_Scroll(object sender, EventArgs e)
-        {
-            b = BackForward.Value;
-            cam.moving(r, u, b);
+            gr.Clear(Color.White);
+            rotate(ref current_polyhedron, current_axis, 45);
+            //Polyhedrons p = NonFaceFaces(current_polyhedron);
+            draw_polyhedron(current_polyhedron);
         }
 
         private void NonFaceButton_Click(object sender, EventArgs e)
         {
-            Polyhedrons p = NonFaceFaces(current_polyhedron);
             gr.Clear(Color.White);
+            Polyhedrons p = NonFaceFaces(current_polyhedron);
             draw_polyhedron(p);
-            draw_camera();
-            MessageBox.Show(r.ToString() + "  " + u.ToString() + "  " + b.ToString());
         }
     }
 }
