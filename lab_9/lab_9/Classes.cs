@@ -8,8 +8,9 @@ using System.IO;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Numerics;
+using System.Drawing.Drawing2D;
 
-namespace Lab_8
+namespace lab_9
 {
     public enum Projection { IZOMETRIC, PROSPECTIVE, AXONOMETRIC, PARALLEL };
 
@@ -54,7 +55,7 @@ namespace Lab_8
         static Matrix parallelMatrix;
 
         //Конструктор с вещественными координатами
-        public Points(double x, double y, double z)
+        public Points(double x, double y, double z, double light = 1.0)
         {
             this.x = x;
             this.y = y;
@@ -67,6 +68,13 @@ namespace Lab_8
             this.x = x;
             this.y = y;
             this.z = z;
+        }
+
+        public Points(Points p)
+        {
+            this.x = p.x;
+            this.y = p.y;
+            this.z = p.z;
         }
 
         //Взятие целочисленной координаты
@@ -98,13 +106,14 @@ namespace Lab_8
                 p.Y = Center.Y + (float)temp[0, 1] - 150;
                 return p;
             }
-            else if(proj == Projection.AXONOMETRIC)
+            else if (proj == Projection.AXONOMETRIC)
             {
                 Matrix temp = new Matrix(1, 4).fillWithElements(getDoubleX, getDoubleY, getDoubleZ, 1) * AxonometricMatrix;
                 p.X = Center.X + (float)temp[0, 0];
                 p.Y = Center.Y + (float)temp[0, 1] - 150;
                 return p;
-            }else
+            }
+            else
             {
                 return new PointF(Center.X + (float)getDoubleX, Center.Y + (float)getDoubleY);
             }
@@ -113,7 +122,7 @@ namespace Lab_8
     }
 
     //Класс ребер
-    class Lines
+    public class Lines
     {
         //Точки ребра
         public Points leftP;
@@ -155,7 +164,7 @@ namespace Lab_8
     }
 
     //Класс граней
-    class Edges
+    public class Edges
     {
         //Лист ребер, которые составляют грань
         List<Lines> edge;
@@ -223,7 +232,7 @@ namespace Lab_8
             VectorNormals v1 = new VectorNormals(edge[1].get_coord());
             VectorNormals v2 = new VectorNormals(edge[0].get_reverse_coord());
             normals = (v2 * v1).MadeNormalazed();
-            double dist = -(edge[1].leftP.getDoubleX*normals.X + edge[1].leftP.getDoubleY * normals.Y + edge[1].leftP.getDoubleZ * normals.Z);
+            double dist = -(edge[1].leftP.getDoubleX * normals.X + edge[1].leftP.getDoubleY * normals.Y + edge[1].leftP.getDoubleZ * normals.Z);
             if (OnSide(normals, dist, center, edge[1].leftP))
             {
                 normals.X *= -1;
@@ -235,7 +244,7 @@ namespace Lab_8
     }
 
     //Многогранник
-    class Polyhedrons
+    public class Polyhedrons
     {
         //Лист граней
         List<Edges> polyhedrons;
@@ -268,17 +277,17 @@ namespace Lab_8
 
         public void CenterPol()
         {
-            double sx =0.0;
-            double sy=0.0;
-            double sz=0.0;
-            foreach(var ed in edges)
+            double sx = 0.0;
+            double sy = 0.0;
+            double sz = 0.0;
+            foreach (var ed in edges)
             {
                 sx += ed.Center().getDoubleX;
                 sy += ed.Center().getDoubleY;
                 sz += ed.Center().getDoubleZ;
             }
-            center = new Points(sx/edges.Count, sy/edges.Count, sz/edges.Count);
-            for(int i =0; i < edges.Count; i++)
+            center = new Points(sx / edges.Count, sy / edges.Count, sz / edges.Count);
+            for (int i = 0; i < edges.Count; i++)
             {
                 edges[i].NormalsV(center);
             }
@@ -532,7 +541,26 @@ namespace Lab_8
             return this;
         }
 
-        public static VectorNormals operator +(VectorNormals v1, VectorNormals v2){
+        public double GetDoubleX
+        {
+            get => X;
+            set => X = value;
+        }
+
+        public double GetDoubleY
+        {
+            get => Y;
+            set => Y = value;
+        }
+
+        public double GetDoubleZ
+        {
+            get => Z;
+            set => Z = value;
+        }
+
+        public static VectorNormals operator +(VectorNormals v1, VectorNormals v2)
+        {
             return new VectorNormals(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z);
         }
 
@@ -549,6 +577,85 @@ namespace Lab_8
         public static VectorNormals operator *(VectorNormals v, double a)
         {
             return new VectorNormals(v.X * a, v.Y * a, v.Z * a);
+        }
+
+        public static double GetCos(VectorNormals v1, VectorNormals v2)
+        {
+            double scal = v1.GetDoubleX * v2.GetDoubleX + v1.GetDoubleY * v2.GetDoubleY + v1.GetDoubleZ * v2.GetDoubleZ;
+            double l1 = Math.Sqrt(v1.GetDoubleX * v1.GetDoubleX + v1.GetDoubleY * v1.GetDoubleY + v1.GetDoubleZ * v1.GetDoubleZ);
+            double l2 = Math.Sqrt(v2.GetDoubleX * v2.GetDoubleX + v2.GetDoubleY * v2.GetDoubleY + v2.GetDoubleZ * v2.GetDoubleZ);
+            return scal / l1 / l2;
+        }
+    }
+
+    public class Vertex : Points
+    {
+        public VectorNormals normals;
+
+        public Vertex(Points p) : base(p) { }
+        public Vertex(int x, int y, int z, double light = 1.0) : base(x, y, z, light) { }
+    }
+
+    public class Light
+    {
+        Points position;
+
+        public Light(Points position)
+        {
+            this.position = position;
+        }
+
+        public Points GetPosition
+        {
+           get => position;
+        }
+
+        public void Moving(double shift_x, double shift_y, double shift_z)
+        {
+            position.getDoubleX += shift_x;
+            position.getDoubleY += shift_y;
+            position.getDoubleZ += shift_z;
+        }
+    }
+
+    public class Lighting
+    {
+        public static double GetLight(Vertex ver, Light light)
+        {
+            var nornal = ver.normals;
+            var ray = new VectorNormals(ver.getDoubleX = light.GetPosition.getDoubleX,
+                ver.getDoubleY - light.GetPosition.getDoubleY,
+                ver.getDoubleZ - light.GetPosition.getDoubleZ);
+            return Math.Max(VectorNormals.GetCos(nornal, ray), 0.0);
+        }
+
+        public static double Intensens(double light)
+        {
+            return (light + 1) / 2;
+        }
+
+        public static VectorNormals Normals(List<Edges> edges, Polyhedrons polyh)
+        {
+            VectorNormals result = new VectorNormals(0, 0, 0);
+            foreach(var edge in edges)
+            {
+                result.GetDoubleX += edge.normals.GetDoubleX;
+                result.GetDoubleY += edge.normals.GetDoubleY;
+                result.GetDoubleZ += edge.normals.GetDoubleZ;
+            }
+            result.GetDoubleX /= edges.Count;
+            result.GetDoubleY /= edges.Count;
+            result.GetDoubleZ /= edges.Count;
+            return result;
+        }
+
+        public static void Lambert(Polyhedrons p, Light light)
+        {
+            Dictionary<Vertex, VectorNormals> norm = new Dictionary<Vertex, VectorNormals>();
+            for(int i = 0; i < p.edges.Count; i++)
+            {
+                Edges edge = p.edges[i];
+            }
         }
     }
 }

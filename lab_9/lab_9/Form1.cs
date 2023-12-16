@@ -1,17 +1,15 @@
-﻿using System;
+﻿using lab_9;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
-using System.Net.NetworkInformation;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using System.Reflection;
-using System.Numerics;
 
-namespace Lab_8
+namespace lab_9
 {
     enum Polyhedron { TETRAHEDRON = 0, HEXAHEDRON, OCTAHEDRON };
     enum Axis { X = 0, Y, Z };
@@ -48,17 +46,10 @@ namespace Lab_8
             }
         }
 
-        public void drawView(VectorNormals v, Points center)
-        {
-            Pen pen = new Pen(Color.Red, 2);
-            gr.DrawLine(pen, new Points(v.X, v.Y, v.Z).GetPoint(), center.GetPoint());
-        }
-
         Polyhedrons NonFaceFaces(Polyhedrons polyh_nonface)
         {
             VectorNormals view = new VectorNormals(-0.5, -1.5, 2);
             current_polyhedron.CenterPol();
-            drawView(view, current_polyhedron.center);
             bool flag = true;
             if (current_polyhedron_type == Polyhedron.TETRAHEDRON)
             {
@@ -106,67 +97,8 @@ namespace Lab_8
                 MessageBox.Show("Ни одна фигуры не выбрана");
         }
 
-        private void load_polyn_Click(object sender, EventArgs e)
-        {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                string file_name = openFileDialog1.FileName;
-                if (File.Exists(file_name))
-                {
-                    current_polyhedron = Polyhedrons.ReadFromFile(file_name);
-                    //where we must draw polyhedron
-                    gr.Clear(Color.White);
-                    draw_polyhedron(current_polyhedron);
-                }
-            }
-        }
-
-        private void save_polyh_Click(object sender, EventArgs e)
-        {
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                current_polyhedron.SaveToFile(saveFileDialog1.FileName);
-            }
-        }
-
-        private void Clear_but_Click(object sender, EventArgs e)
-        {
-            gr.Clear(Color.White);
-        }
-
-        void rotate(ref Polyhedrons polyh, Axis ax, double angle)
-        {
-            angle = Math.PI * angle / 180.0;
-            Matrix rotate_ = new Matrix(0, 0);
-            if (ax == Axis.X)
-            {
-                rotate_ = new Matrix(4, 4).fillWithElements(1, 0, 0, 0, 0, Math.Cos(angle), -Math.Sin(angle), 0, 0, Math.Sin(angle), Math.Cos(angle), 0, 0, 0, 0, 1);
-            }
-            else if (ax == Axis.Y)
-            {
-                rotate_ = new Matrix(4, 4).fillWithElements(Math.Cos(angle), 0, Math.Sin(angle), 0, 0, 1, 0, 0, -Math.Sin(angle), 0, Math.Cos(angle), 0, 0, 0, 0, 1);
-            }
-            else if (ax == Axis.Z)
-            {
-                rotate_ = new Matrix(4, 4).fillWithElements(Math.Cos(angle), -Math.Sin(angle), 0, 0, Math.Sin(angle), Math.Cos(angle), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-            }
-            foreach (var edge in polyh.edges)
-            {
-                foreach (var line in edge.lines)
-                {
-                    var p1 = line.leftP;
-                    var p2 = line.rightP;
-                    var temp_p1 = rotate_ * new Matrix(4, 1).fillWithElements(p1.getDoubleX, p1.getDoubleY, p1.getDoubleZ, 1);
-                    var temp_p2 = rotate_ * new Matrix(4, 1).fillWithElements(p2.getDoubleX, p2.getDoubleY, p2.getDoubleZ, 1);
-                    line.leftP = new Points(temp_p1[0, 0], temp_p1[1, 0], temp_p1[2, 0]);
-                    line.rightP = new Points(temp_p2[0, 0], temp_p2[1, 0], temp_p2[2, 0]);
-                }
-            }
-        }
-
         private void choose_polyh_SelectedIndexChanged(object sender, EventArgs e)
         {
-
             if (choose_polyh.SelectedIndex == 0)
                 current_polyhedron_type = Polyhedron.TETRAHEDRON;
             else if (choose_polyh.SelectedIndex == 1)
@@ -175,6 +107,11 @@ namespace Lab_8
                 current_polyhedron_type = Polyhedron.OCTAHEDRON;
             else
                 MessageBox.Show("Не выбрана ни одна фигура");
+        }
+
+        private void Clear_Click(object sender, EventArgs e)
+        {
+            gr.Clear(Color.White);
         }
 
         private void choose_axis_SelectedIndexChanged(object sender, EventArgs e)
@@ -203,33 +140,6 @@ namespace Lab_8
             }
             else
                 MessageBox.Show("Не выбрана ни одна проекция");
-        }
-
-        private void Rotation_Click(object sender, EventArgs e)
-        {
-            gr.Clear(Color.White);
-            rotate(ref current_polyhedron, current_axis, 10);
-            Polyhedrons p = NonFaceFaces(current_polyhedron);
-            draw_polyhedron(p);
-        }
-
-        private void NonFaceButton_Click(object sender, EventArgs e)
-        {
-            gr.Clear(Color.White);
-            Polyhedrons p = NonFaceFaces(current_polyhedron);
-            draw_polyhedron(p);
-        }
-
-        private void auto_rotate_Click(object sender, EventArgs e)
-        {
-            int angle = 10;
-            for(int i = 10; i < 360; i += 10)
-            {
-                gr.Clear(Color.White);
-                Polyhedrons p = NonFaceFaces(current_polyhedron);
-                rotate(ref p, current_axis, angle);
-                draw_polyhedron(p);
-            }
         }
     }
 }

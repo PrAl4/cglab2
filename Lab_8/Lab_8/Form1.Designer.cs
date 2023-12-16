@@ -87,7 +87,7 @@
             // choose_proj
             // 
             choose_proj.FormattingEnabled = true;
-            choose_proj.Items.AddRange(new object[] { "Изометрия", "Аксонометрия", "Перспектива", "Параллель" });
+            choose_proj.Items.AddRange(new object[] { "Изометрия", "Аксонометрия", "Перспектива" });
             choose_proj.Location = new Point(12, 138);
             choose_proj.Name = "choose_proj";
             choose_proj.Size = new Size(213, 28);
